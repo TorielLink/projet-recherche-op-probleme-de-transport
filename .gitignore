@@ -42,3 +42,7 @@ coverage.xml
 Thumbs.db
 *.tmp
 *.log
+
+# Résultats de test
+Data/
+Figures/
