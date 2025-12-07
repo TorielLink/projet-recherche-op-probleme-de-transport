@@ -1,0 +1,44 @@
+# ----------------------------
+# Environnement Python
+# ----------------------------
+.venv/
+venv/
+ENV/
+env/
+
+# Caches et fichiers compilés Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Tests (si ajoutés plus tard)
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+
+# IDE : PyCharm, IntelliJ
+.idea/
+*.iml
+
+# VSCode (au cas où)
+.vscode/
+
+# Outils divers
+.mypy_cache/
+.dmypy.json
+coverage.xml
+
+# Fichiers temporaires ou système
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
