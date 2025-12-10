@@ -4,7 +4,7 @@ def maximiser_transport_sur_cycle(solution, cycle):
     
     # Args:
     #     solution: Matrice de transport [n × m]
-    #     cycle: Liste des sommets du cycle (ex: ['P0', 'C1', 'P2', 'C0']) retournée par la fonction has_cycle
+    #     cycle: Liste des sommets du cycle retournée par la fonction bfs_detect_cycle (ex: ['P0', 'C1', 'P2', 'C0'])
     
     # Returns:
     #     (solution, delta, aretes_supprimees)
