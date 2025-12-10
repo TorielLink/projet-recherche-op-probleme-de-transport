@@ -1,6 +1,6 @@
 import time
 from algorithms.northwest import northwest_solution
-
+from algorithms.BalasHammer import balas_hammer
 
 # ---------------------------------------------------------------------
 # Temps de l'algorithme Nord-Ouest
@@ -18,8 +18,7 @@ def measure_time_nord_ouest(couts, P, C):
 # ---------------------------------------------------------------------
 def measure_time_balas_hammer(couts, P, C):
     start = time.perf_counter()
-    # sol = balas_hammer(couts, P, C)   # TODO lorsque BH sera implémenté
-    time.sleep(0.0001)  # à supprimer (évite un temps nul)
+    balas_hammer(couts, P.copy(), C.copy())
     return time.perf_counter() - start
 
 
