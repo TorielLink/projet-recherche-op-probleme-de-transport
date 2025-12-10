@@ -71,7 +71,6 @@ def main():
             afficher_solution_nord_ouest(provision, commande, couts)
         elif choix == 2:
             # TODO : appeler ici la méthode Balas-Hammer une fois implémentée
-            print("\nLa méthode Balas-Hammer n'est pas encore implémentée.")
             solution = balas_hammer(couts, provision, commande)
             print("\nSolution proposée (matrice des allocations) :")
 
