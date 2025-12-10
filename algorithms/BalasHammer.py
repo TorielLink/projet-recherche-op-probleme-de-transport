@@ -23,7 +23,6 @@ def calculer_penalites(C, lignes_actives, colonnes_actives):
 
 
 def balas_hammer(C, O, D):
-    import math
 
     m = len(C)
     n = len(C[0])
