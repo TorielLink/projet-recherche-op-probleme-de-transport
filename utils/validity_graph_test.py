@@ -102,3 +102,42 @@ def build_cycle(u, v, parent):
     cycle += reversed(path_v)
 
     return cycle
+
+
+# ---------------------------------------------------------------------
+# Vérifie si un graphe est connexe grâce à un BFS.
+#
+# Si le graphe n'est pas connexe :
+#   - renvoie False
+#   - renvoie la liste des composantes connexes (liste de listes)
+#
+# Si le graphe est connexe :
+#   - renvoie True
+#   - renvoie [liste complète des nœuds]
+# ---------------------------------------------------------------------
+def check_connectivity(graph):
+    visited = set()
+    components = []
+
+    for start in graph:
+        if start not in visited:
+            queue = deque([start])
+            visited.add(start)
+            component = [start]
+
+            while queue:
+                u = queue.popleft()
+                for v in graph[u]:
+                    if v not in visited:
+                        visited.add(v)
+                        queue.append(v)
+                        component.append(v)
+
+            components.append(component)
+
+    # Si plus d'une composante, le graphe n'est PAS connexe
+    if len(components) > 1:
+        return False, components
+
+    return True, components
+
