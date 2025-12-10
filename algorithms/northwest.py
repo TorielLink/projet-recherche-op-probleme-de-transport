@@ -61,6 +61,7 @@ def afficher_solution_nord_ouest(provision, commande, couts):
     table.afficher_table(data)
 
     cout = cout_total(couts, solution)
-    print("\nCoût total du transport :", cout)
+    cout_formatte = format(cout, ",").replace(",", " ")
+    print("\nCoût total du transport :", cout_formatte)
 
     return solution, cout
