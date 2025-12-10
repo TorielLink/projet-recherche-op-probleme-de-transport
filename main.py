@@ -2,7 +2,7 @@ import os
 from utils.reader import read_table_file
 from utils.display import DisplayTable
 from algorithms.northwest import afficher_solution_nord_ouest
-
+from algorithms.BalasHammer import balas_hammer
 
 def main():
     data_dir = "Tableaux"
@@ -71,7 +71,11 @@ def main():
             afficher_solution_nord_ouest(provision, commande, couts)
         elif choix == 2:
             # TODO : appeler ici la méthode Balas-Hammer une fois implémentée
-            print("\nLa méthode Balas-Hammer n'est pas encore implémentée.")
+            solution = balas_hammer(couts, provision, commande)
+            print("\nSolution proposée (matrice des allocations) :")
+
+            for ligne in solution:
+                print(ligne)
 
         # TODO : implémenter l'algorithme du Marche-Pied
         print("\nOptimisation avec la méthode du Marche-Pied :")
