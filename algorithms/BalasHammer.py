@@ -68,18 +68,3 @@ def balas_hammer(C, O, D):
             colonnes_actives.remove(j)
 
     return X
-
-if __name__ == "__main__":
-    # Exemple d'utilisation
-    C = [
-        [2, 3, 1],
-        [5, 4, 8],
-        [5, 6, 8]
-    ]
-
-    O = [20, 30, 25]  # Offres
-    D = [10, 40, 25]  # Demandes
-
-    solution = balas_hammer(C, O.copy(), D.copy())
-    for ligne in solution:
-        print(ligne)
