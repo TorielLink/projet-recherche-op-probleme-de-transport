@@ -28,7 +28,7 @@ def maximiser_transport_sur_cycle(solution, cycle):
             delta = min(delta, solution[i][j])
     
     # =====================================================
-    # AFFICHAGE DES CONDITIONS POUR CHAQUE CASE (obligatoire)
+    # AFFICHAGE DES CONDITIONS POUR CHAQUE CASE
     # =====================================================
     print("\n=== Maximisation du transport sur le cycle ===")
     print(f"Cycle : {' -> '.join(cycle)} -> {cycle[0]}")
@@ -52,7 +52,7 @@ def maximiser_transport_sur_cycle(solution, cycle):
             aretes_supprimees.append((i, j))
     
     # =====================================================
-    # AFFICHAGE DES ARÊTES SUPPRIMÉES (obligatoire)
+    # AFFICHAGE DES ARÊTES SUPPRIMÉES
     # =====================================================
     if aretes_supprimees:
         print("\nArête(s) supprimée(s) :")
