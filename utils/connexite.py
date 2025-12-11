@@ -79,7 +79,7 @@ def _connect_graph(graph, edges, solution, candidates):
             solution[i][j] = 0
             added = True
 
-            print(f"  - Connexion des composantes via ({u}, {v}) coût {cost}")
+            print(f"  - Connexion des composantes via (P{i+1}, C{j+1}) coût {cost}")
 
             # Recalculer les composantes après ajout et retirer le candidat utilisé
             comp, num_comp = _components(graph)
@@ -133,7 +133,7 @@ def _complete_basis(graph, edges, solution, candidates, target_edges):
             solution[i][j] = 0
             added = True
 
-            print(f"  - Ajout de l'arête ({u}, {v}) coût {cost} (aucun cycle créé)")
+            print(f"  - Ajout de l'arête (P{i+1}, C{j+1}) coût {cost} (aucun cycle créé)")
             remaining.pop(idx)
             break
 
@@ -191,6 +191,6 @@ def connexite(solution, couts):
     # 2) Compléter la base jusqu'à m+n-1 sans créer de cycles
     _complete_basis(graph, edges, solution, candidates, target_edges)
 
-    # Construire la liste finale des arêtes de base (indices i,j)
+    # Construire la liste finale des arêtes de base (indices i,j en 1-based)
     base_cells = [(i, j) for i in range(m) for j in range(n) if (f"P{i}", f"C{j}") in edges]
     return solution, base_cells

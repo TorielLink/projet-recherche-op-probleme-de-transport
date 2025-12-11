@@ -14,7 +14,7 @@ from utils.calculs import cout_total
 def northwest_solution(provision, commande):
     n = len(provision)
     m = len(commande)
-    solution = [[0] * m for _ in range(n)]
+    solution = [[None] * m for _ in range(n)]
 
     p = provision.copy()
     c = commande.copy()

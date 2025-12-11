@@ -82,7 +82,8 @@ def main():
         # TODO : implémenter l'algorithme du Marche-Pied
         print("\nOptimisation avec la méthode du Marche-Pied :")
         solution_connexe, base_cells = connexite(solution, couts)
-        Couts_pot, Couts_mar, E_prov, E_com = get_costs(solution_connexe, couts, 0, True)
+        print(base_cells)
+        Couts_pot, Couts_mar, E_prov, E_com = get_costs(base_cells, couts, 0, True)
         display_costs = DisplayTable()
         couts_pot = display_costs.DonneesTest(Couts_pot, provision, commande)
         print("\n=== Coûts potentiels ===")
