@@ -1,4 +1,4 @@
-import os
+import os, psutil, multiprocessing, sys
 import matplotlib.pyplot as plt
 import csv
 
@@ -122,14 +122,26 @@ def plot_cloud(results, title, key):
 # ---------------------------------------------------------------------
 # Main : exécute tous les graphes
 # ---------------------------------------------------------------------
+import psutil, os
+
 if __name__ == "__main__":
     ensure_directories()
 
-    # Définition des tailles des problèmes de transport
+    # Limite à 1 cœur (CPU 0)
+    p = psutil.Process(os.getpid())
+    p.cpu_affinity([0])
+
+    # Valeurs de n à tester
     n_values = [10, 40, 100]
 
+    # Exécutée sur 1 seul cœur
     all_results = generate_cloud_data(n_values)
 
+    # Rétablir l’affinité : tous les cœurs autorisés
+    cpu_count = multiprocessing.cpu_count()
+    p.cpu_affinity(list(range(cpu_count)))
+
+    # création des graphes → peut utiliser plusieurs cœurs
     plot_cloud(all_results, "θNO(n)", "theta_no")
     plot_cloud(all_results, "θBH(n)", "theta_bh")
     plot_cloud(all_results, "tNO(n)", "t_no")
@@ -138,3 +150,4 @@ if __name__ == "__main__":
     plot_cloud(all_results, "θBH(n) + tBH(n)", "sum_bh")
 
     plt.show()
+    sys.exit(0)
