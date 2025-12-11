@@ -8,7 +8,9 @@ def maximiser_transport_sur_cycle(solution, cycle):
     
     # Returns:
     #     (solution, delta, aretes_supprimees)
-    # 
+    # soution: proposition de transport
+    # delta: valeur de la quantité de marchandise que l'on souhaite ajouter/retirer  à chaque arêtes
+    # aretes_supprimees: retourne les couples de sommets représentant les arêtes. 
     aretes = []
     delta = float('inf')
     
