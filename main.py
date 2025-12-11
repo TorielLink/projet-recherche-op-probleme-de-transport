@@ -1,9 +1,12 @@
+from email import utils
 import os
 from utils.reader import read_table_file
 from utils.display import DisplayTable
+from utils.connexite import connexite
 from algorithms.northwest import afficher_solution_nord_ouest
 from algorithms.BalasHammer import balas_hammer
 from algorithms.MarchePied import get_costs
+
 
 def main():
     data_dir = "Tableaux"
@@ -74,13 +77,12 @@ def main():
             # TODO : appeler ici la méthode Balas-Hammer une fois implémentée
             solution = balas_hammer(couts, provision, commande)
             print("\nSolution proposée (matrice des allocations) :")
-
-            for ligne in solution:
-                print(ligne)
+            table.afficher_table(DisplayTable.DonneesTest(solution, provision, commande))
 
         # TODO : implémenter l'algorithme du Marche-Pied
         print("\nOptimisation avec la méthode du Marche-Pied :")
-        Couts_pot, Couts_mar, E_prov, E_com = get_costs(couts, 0, True)
+        solution_connexe, base_cells = connexite(solution, couts)
+        Couts_pot, Couts_mar, E_prov, E_com = get_costs(solution_connexe, couts, 0, True)
         display_costs = DisplayTable()
         couts_pot = display_costs.DonneesTest(Couts_pot, provision, commande)
         print("\n=== Coûts potentiels ===")
