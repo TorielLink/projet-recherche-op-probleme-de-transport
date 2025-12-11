@@ -22,7 +22,39 @@ def calculer_penalites(C, lignes_actives, colonnes_actives):
     return penalites
 
 
-def balas_hammer(C, O, D):
+def afficher_penalites(penalites, lignes_actives, colonnes_actives):
+    # Initialisation sans afficher la première itération vide
+    if not hasattr(afficher_penalites, "iter"):
+        afficher_penalites.iter = 0
+        afficher_penalites.prev_lignes = set(lignes_actives)
+        afficher_penalites.prev_colonnes = set(colonnes_actives)
+        return
+
+    afficher_penalites.iter += 1
+    current_lignes = set(lignes_actives)
+    current_colonnes = set(colonnes_actives)
+
+    removed_lignes = sorted(afficher_penalites.prev_lignes - current_lignes)
+    removed_colonnes = sorted(afficher_penalites.prev_colonnes - current_colonnes)
+
+    if removed_lignes:
+        lignes_str = "  ".join(f"P{idx+1}" for idx in removed_lignes)
+    else:
+        lignes_str = "Aucun"
+
+    if removed_colonnes:
+        colonnes_str = "  ".join(f"C{idx+1}" for idx in removed_colonnes)
+    else:
+        colonnes_str = "Aucun"
+
+    max_pen = max(penalites.values()) if penalites else 0
+
+    print(f"Itération {afficher_penalites.iter}: Lignes supprimées : {lignes_str} | Colonnes supprimées : {colonnes_str} | Pénalité max : {max_pen}")
+
+    afficher_penalites.prev_lignes = current_lignes
+    afficher_penalites.prev_colonnes = current_colonnes
+
+def balas_hammer(C, O, D, display=True):
 
     m = len(C)
     n = len(C[0])
@@ -38,6 +70,8 @@ def balas_hammer(C, O, D):
 
         # 1. Calcul des pénalités
         penalites = calculer_penalites(C, lignes_actives, colonnes_actives)
+        if display:
+            afficher_penalites(penalites, lignes_actives, colonnes_actives)
 
         # 2. Sélection de la plus grande pénalité
         (type_sel, index_sel), _ = max(penalites.items(), key=lambda item: item[1])
