@@ -34,6 +34,9 @@ def get_costs(arcs, couts, index_prov_arbitraire, display):
         for i in range(len(E_com)):
             print(f"E(C{i+1}) = {E_com[i]}")
 
+    min_pos, min_value = lowest_cout_mar(Couts_mar)
+    print(f"Position du coût marginal le plus bas : {min_pos}, Valeur : {min_value}")
+
     return Couts_pot, Couts_mar, E_prov, E_com
 
 def lowest_cout_mar(Couts_mar):
@@ -46,4 +49,4 @@ def lowest_cout_mar(Couts_mar):
                 min_pos = (i, j)
     if min_value > 0:
         return 0
-    return min_pos
+    return min_pos, min_value
