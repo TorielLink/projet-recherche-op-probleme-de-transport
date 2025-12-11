@@ -3,6 +3,7 @@ from utils.reader import read_table_file
 from utils.display import DisplayTable
 from algorithms.northwest import afficher_solution_nord_ouest
 from algorithms.BalasHammer import balas_hammer
+from algorithms.MarchePied import get_costs
 
 def main():
     data_dir = "Tableaux"
@@ -68,7 +69,7 @@ def main():
                 print("Veuillez entrer 1 ou 2.")
 
         if choix == 1:
-            afficher_solution_nord_ouest(provision, commande, couts)
+            solution, tot = afficher_solution_nord_ouest(provision, commande, couts)
         elif choix == 2:
             # TODO : appeler ici la méthode Balas-Hammer une fois implémentée
             solution = balas_hammer(couts, provision, commande)
@@ -79,7 +80,14 @@ def main():
 
         # TODO : implémenter l'algorithme du Marche-Pied
         print("\nOptimisation avec la méthode du Marche-Pied :")
-        print("Cette partie sera intégrée plus tard.")
+        Couts_pot, Couts_mar, E_prov, E_com = get_costs(couts, 0, True)
+        display_costs = DisplayTable()
+        couts_pot = display_costs.DonneesTest(Couts_pot, provision, commande)
+        print("\n=== Coûts potentiels ===")
+        display_costs.afficher_table(couts_pot)
+        couts__mar = display_costs.DonneesTest(Couts_mar, provision, commande)
+        print("\n=== Coûts marginaux ===")
+        display_costs.afficher_table(couts__mar)
 
         # TODO : afficher la solution finale optimisée une fois l'optimisation programmée
         print("\nLa solution finale optimisée sera affichée ici lorsqu'elle sera disponible.")
