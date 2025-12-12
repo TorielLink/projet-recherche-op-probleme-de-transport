@@ -1,9 +1,13 @@
 import os
 from utils.reader import read_table_file
 from utils.display import DisplayTable
+from utils.connexite import connexite
 from algorithms.northwest import afficher_solution_nord_ouest
 from algorithms.BalasHammer import balas_hammer
 from algorithms.MarchePied import get_costs
+from algorithms.MarchePied import marche_pied_complet
+from algorithms.MarchePied import cout_total
+
 
 def main():
     data_dir = "Tableaux"
@@ -69,28 +73,48 @@ def main():
                 print("Veuillez entrer 1 ou 2.")
 
         if choix == 1:
-            solution, tot = afficher_solution_nord_ouest(provision, commande, couts)
+            solution, _ = afficher_solution_nord_ouest(provision, commande, couts)
+
         elif choix == 2:
-            # TODO : appeler ici la méthode Balas-Hammer une fois implémentée
-            solution = balas_hammer(couts, provision, commande)
-            print("\nSolution proposée (matrice des allocations) :")
+            solution = balas_hammer(couts, provision.copy(), commande.copy())
+            print("\n=== Solution initiale (Balas-Hammer) ===")
+            table.afficher_table(
+                DisplayTable.DonneesTest(solution, provision, commande)
+            )
 
-            for ligne in solution:
-                print(ligne)
+        # Demande à l'utilisateur s'il souhaite optimiser
+        while True:
+            opt = input(
+                "\nSouhaitez-vous optimiser la solution avec le Marche-Pied ? (Oui/Non) : "
+            ).strip().lower()
 
-        # TODO : implémenter l'algorithme du Marche-Pied
-        print("\nOptimisation avec la méthode du Marche-Pied :")
-        Couts_pot, Couts_mar, E_prov, E_com = get_costs(couts, 0, True)
-        display_costs = DisplayTable()
-        couts_pot = display_costs.DonneesTest(Couts_pot, provision, commande)
-        print("\n=== Coûts potentiels ===")
-        display_costs.afficher_table(couts_pot)
-        couts__mar = display_costs.DonneesTest(Couts_mar, provision, commande)
-        print("\n=== Coûts marginaux ===")
-        display_costs.afficher_table(couts__mar)
+            if opt in ("oui", "o", "non", "n"):
+                break
+            print("Merci de répondre par Oui ou Non.")
 
-        # TODO : afficher la solution finale optimisée une fois l'optimisation programmée
-        print("\nLa solution finale optimisée sera affichée ici lorsqu'elle sera disponible.")
+        # Optimisation avec le Marche-Pied (si demandée)
+        if opt in ("oui", "o"):
+            print("\nOptimisation avec la méthode du Marche-Pied :")
+
+            solution_optimale = marche_pied_complet(
+                solution,
+                couts,
+                provision,
+                commande,
+                display=True
+            )
+
+            print("\n=== Solution finale optimisée ===")
+            table.afficher_table(
+                DisplayTable.DonneesTest(solution_optimale, provision, commande)
+            )
+
+            cout_final = cout_total(couts, solution_optimale)
+            cout_formatte = format(cout_final, ",").replace(",", " ")
+            print(f"\nCoût total optimisé : {cout_formatte}")
+
+        else:
+            print("\nSolution conservée sans optimisation.")
 
         # Choix de continuer ou quitter
         while True:
