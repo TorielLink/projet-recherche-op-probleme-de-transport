@@ -47,6 +47,6 @@ def lowest_cout_mar(Couts_mar):
             if Couts_mar[i][j] < min_value:
                 min_value = Couts_mar[i][j]
                 min_pos = (i, j)
-    if min_value > 0:
+    if min_value >= 0:
         return None,None
     return min_pos, min_value
