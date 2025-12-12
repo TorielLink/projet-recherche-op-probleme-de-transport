@@ -5,6 +5,7 @@ from utils.reader import read_table_file
 from utils.trace_generator import generate_trace_file
 from algorithms.northwest import northwest_solution, cout_total
 from algorithms.BalasHammer import balas_hammer
+#from algorithms.MarchePied import marche_pied_complet
 
 
 GROUP = "NEW3"
@@ -31,9 +32,7 @@ def generate_all_traces():
         original_P = P.copy()
         original_C = C.copy()
 
-        # --------------------------------
         # Nord-Ouest
-        # --------------------------------
         no_P = original_P.copy()
         no_C = original_C.copy()
 
@@ -46,9 +45,23 @@ def generate_all_traces():
             sol_no, cost_no
         )
 
-        # --------------------------------
+        # Marche-Pied avec Nord-Ouest
+        # sol_mp_no = marche_pied_complet(
+        #     sol_no,
+        #     original_couts,
+        #     original_P,
+        #     original_C,
+        #     display=False
+        # )
+        # cost_mp_no = cout_total(original_couts, sol_mp_no)
+        #
+        # generate_trace_file(
+        #     GROUP, TEAM, problem_number, "mp_no",
+        #     original_couts, original_P, original_C,
+        #     sol_mp_no, cost_mp_no
+        # )
+
         # Balas-Hammer
-        # --------------------------------
         bh_P = original_P.copy()
         bh_C = original_C.copy()
 
@@ -60,6 +73,22 @@ def generate_all_traces():
             original_couts, original_P, original_C,
             sol_bh, cost_bh
         )
+
+        # Marche-Pied avec Balas-Hammer
+        # sol_mp_bh = marche_pied_complet(
+        #     sol_bh,
+        #     original_couts,
+        #     original_P,
+        #     original_C,
+        #     display=False
+        # )
+        # cost_mp_bh = cout_total(original_couts, sol_mp_bh)
+        #
+        # generate_trace_file(
+        #     GROUP, TEAM, problem_number, "mp_bh",
+        #     original_couts, original_P, original_C,
+        #     sol_mp_bh, cost_mp_bh
+        # )
 
 
 if __name__ == "__main__":
