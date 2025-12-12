@@ -37,9 +37,12 @@ def generate_trace_file(group, team, problem_number, method,
         f.write(f"Groupe : {group}\n")
         f.write(f"Équipe : {team}\n")
         f.write(f"Problème : {problem_number}\n")
-        f.write(
-            f"Méthode : {'Nord-Ouest' if method == 'no' else 'Balas-Hammer'}\n\n"
+        method_label = (
+                ('Nord-Ouest' if method in ('no', 'mp_no') else
+                 'Balas-Hammer' if method in ('bh', 'mp_bh') else method)
+                + (' avec Marche-Pied' if method.startswith('mp_') else '')
         )
+        f.write(f"Méthode : {method_label}\n\n")
 
         f.write("=== Problème initial ===\n")
         f.write(input_table_str + "\n")
