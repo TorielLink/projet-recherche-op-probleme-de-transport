@@ -122,7 +122,6 @@ def plot_cloud(results, title, key):
 # ---------------------------------------------------------------------
 # Main : exécute tous les graphes
 # ---------------------------------------------------------------------
-import psutil, os
 
 if __name__ == "__main__":
     ensure_directories()
