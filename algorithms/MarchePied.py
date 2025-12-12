@@ -358,3 +358,98 @@ def afficher_solution(solution, couts):
     
     total = cout_total(couts, solution)
     print(f"\nCoût total : {total}")
+
+def marche_pied_complet(solution, couts, provision=None, commande=None, display=True):
+    """
+    Version structurée et complète de l'algorithme du marche-pied.
+
+    Cette méthode repose entièrement sur les fonctions déjà existantes :
+      - connexite
+      - get_costs
+      - lowest_cout_mar
+      - trouver_cycle_avec_case
+      - maximiser_transport_sur_cycle
+
+    Elle boucle jusqu'à ce qu'il n'existe plus de coût marginal négatif
+    et retourne la solution optimale.
+    """
+
+    # Copie de la solution pour éviter les effets de bord
+    sol = [row.copy() for row in solution]
+
+    if display:
+        print("\n" + "=" * 60)
+        print("MARCHE-PIED")
+        print("=" * 60)
+        print(f"Coût initial : {cout_total(couts, sol)}")
+
+    # Rend la base connexe et correcte
+    sol, base_cells = connexite(sol, couts)
+    base_set = set(base_cells)
+
+    iteration = 0
+
+    while True:
+        iteration += 1
+
+        if display:
+            print(f"\n--- Itération {iteration} ---")
+
+        # Potentiels + coûts marginaux
+        Couts_pot, Couts_mar, _, _ = get_costs(
+            base_cells, couts, index_prov_arbitraire=0, display=display
+        )
+
+        # Recherche de la case entrante
+        min_pos, min_value = lowest_cout_mar(Couts_mar, base_set)
+
+        # Condition d'arrêt
+        if min_pos is None:
+            if display:
+                print("\nSolution optimale atteinte.")
+                print(f"Coût final : {cout_total(couts, sol)}")
+            return sol
+
+        if display:
+            print(
+                f"Case entrante : P{min_pos[0]+1}-C{min_pos[1]+1} "
+                f"(coût marginal = {min_value})"
+            )
+
+        # Recherche du cycle
+        cycle = trouver_cycle_avec_case(sol, base_cells, min_pos, display)
+
+        if cycle is None:
+            if display:
+                print("Erreur : aucun cycle trouvé.")
+            return sol
+
+        # Ajout temporaire de la case entrante
+        i_new, j_new = min_pos
+        sol[i_new][j_new] = 0
+
+        # Maximisation sur le cycle
+        sol, delta, aretes_supprimees = maximiser_transport_sur_cycle(sol, cycle)
+
+        if display:
+            print(f"δ appliqué : {delta}")
+            print(f"Coût après itération {iteration} : {cout_total(couts, sol)}")
+
+        # Mise à jour de la base
+        base_set.add(min_pos)
+
+        # Retirer UNE arête annulée pour conserver m+n-1 arêtes
+        for (i, j) in aretes_supprimees:
+            if (i, j) in base_set and (i, j) != min_pos:
+                base_set.remove((i, j))
+                if display:
+                    print(f"Arête retirée : P{i+1}-C{j+1}")
+                break
+
+        base_cells = list(base_set)
+
+        # Sécurité : éviter une boucle infinie
+        if iteration > 100:
+            if display:
+                print("Arrêt : nombre maximal d'itérations atteint.")
+            return sol

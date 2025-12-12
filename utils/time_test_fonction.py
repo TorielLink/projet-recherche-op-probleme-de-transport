@@ -1,6 +1,11 @@
 import time
+import os
+from contextlib import redirect_stdout
+
+from algorithms.MarchePied import marche_pied
 from algorithms.northwest import northwest_solution
 from algorithms.BalasHammer import balas_hammer
+
 
 # ---------------------------------------------------------------------
 # Temps de l'algorithme Nord-Ouest
@@ -18,7 +23,9 @@ def measure_time_nord_ouest(couts, P, C):
 # ---------------------------------------------------------------------
 def measure_time_balas_hammer(couts, P, C):
     start = time.perf_counter()
-    balas_hammer(couts, P.copy(), C.copy())
+    with open(os.devnull, "w") as fnull:
+        with redirect_stdout(fnull):
+            balas_hammer(couts, P.copy(), C.copy())
     return time.perf_counter() - start
 
 
@@ -28,9 +35,16 @@ def measure_time_balas_hammer(couts, P, C):
 # ---------------------------------------------------------------------
 def measure_time_marche_pied_from_NO(couts, P, C):
     start = time.perf_counter()
-    # sol = northwest_solution(P, C)
-    # marche_pied(sol, couts)           # TODO
-    time.sleep(0.0001)  # à supprimer (évite un temps nul)
+
+    solution_initiale = northwest_solution(P.copy(), C.copy())
+    with open(os.devnull, "w") as fnull:
+        with redirect_stdout(fnull):
+            marche_pied(
+                solution_initiale,
+                couts,
+                display=False
+            )
+
     return time.perf_counter() - start
 
 
@@ -40,7 +54,14 @@ def measure_time_marche_pied_from_NO(couts, P, C):
 # ---------------------------------------------------------------------
 def measure_time_marche_pied_from_BH(couts, P, C):
     start = time.perf_counter()
-    # sol = balas_hammer(couts, P, C)   # TODO
-    # marche_pied(sol, couts)           # TODO
-    time.sleep(0.0001)  # à supprimer (évite un temps nul)
+
+    with open(os.devnull, "w") as fnull:
+        with redirect_stdout(fnull):
+            solution_initiale = balas_hammer(couts, P.copy(), C.copy())
+            marche_pied(
+                solution_initiale,
+                couts,
+                display=False
+            )
+
     return time.perf_counter() - start
