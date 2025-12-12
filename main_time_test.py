@@ -1,3 +1,4 @@
+import psutil, os, multiprocessing
 from utils.ramdom_problem import generate_random_transport_problem
 from utils.time_test_fonction import (
     measure_time_nord_ouest,
@@ -38,4 +39,8 @@ def benchmark(n_values):
 
 
 if __name__ == "__main__":
+    # Limite l'exécution à un seul cœur CPU
+    p = psutil.Process(os.getpid())
+    p.cpu_affinity([0])
     benchmark([3, 5, 8, 10])
+    p.cpu_affinity(list(range(multiprocessing.cpu_count())))
