@@ -1,0 +1,47 @@
+Groupe : NEW3
+Équipe : 5
+Problème : 4
+Méthode : Balas-Hammer + Marche-Pied
+
+=== Problème initial ===
+            |    C1     |    C2     | Provisions 
+------------+-----------+-----------+------------
+     P1     |    30     |     1     |    600     
+------------+-----------+-----------+------------
+     P2     |     1     |    30     |    500     
+------------+-----------+-----------+------------
+ Commandes  |    100    |   1000    |    1100    
+
+=== Étapes de l’optimisation (Marche-Pied) ===
+
+============================================================
+MARCHE-PIED
+============================================================
+Coût initial : 12700
+La base contient déjà au moins n+m-1 arêtes (aucun ajout nécessaire).
+
+--- Itération 1 ---
+
+On fixe de façon arbitraire E(P1) = 0
+E(P1) - E(C2) = 1 => E(C2) = 0 - 1 = -1
+E(P2) - E(C2) = 30 => E(P2) = 30 + (-1) = 29
+E(P2) - E(C1) = 1 => E(C1) = 29 - 1 = 28
+
+--- Potentiels calculés ---
+E(P1) = 0
+E(P2) = 29
+E(C1) = 28
+E(C2) = -1
+
+Solution optimale atteinte.
+
+=== Solution finale ===
+            |    C1     |    C2     | Provisions 
+------------+-----------+-----------+------------
+     P1     |     0     |    600    |    600     
+------------+-----------+-----------+------------
+     P2     |    100    |    400    |    500     
+------------+-----------+-----------+------------
+ Commandes  |    100    |   1000    |    1100    
+
+Coût total : 12 700

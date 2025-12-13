@@ -1,0 +1,144 @@
+Groupe : NEW3
+Équipe : 5
+Problème : 8
+Méthode : Nord-Ouest + Marche-Pied
+
+=== Problème initial ===
+            |    C1     |    C2     | Provisions 
+------------+-----------+-----------+------------
+     P1     |    50     |    20     |    100     
+------------+-----------+-----------+------------
+     P2     |    10     |    50     |    200     
+------------+-----------+-----------+------------
+     P3     |    55     |    40     |    100     
+------------+-----------+-----------+------------
+     P4     |    35     |    45     |    200     
+------------+-----------+-----------+------------
+     P5     |    12     |     8     |    200     
+------------+-----------+-----------+------------
+ Commandes  |    300    |    500    |    800     
+
+=== Étapes de l’optimisation (Marche-Pied) ===
+
+============================================================
+MARCHE-PIED
+============================================================
+Coût initial : 21600
+Le graphe n'est pas connexe (2 composantes). Ajout d'arêtes...
+  - Connexion des composantes via (P5, C1) coût 12
+
+--- Itération 1 ---
+
+On fixe de façon arbitraire E(P1) = 0
+E(P1) - E(C1) = 50 => E(C1) = 0 - 50 = -50
+E(P2) - E(C1) = 10 => E(P2) = 10 + (-50) = -40
+E(P5) - E(C1) = 12 => E(P5) = 12 + (-50) = -38
+E(P5) - E(C2) = 8 => E(C2) = -38 - 8 = -46
+E(P3) - E(C2) = 40 => E(P3) = 40 + (-46) = -6
+E(P4) - E(C2) = 45 => E(P4) = 45 + (-46) = -1
+
+--- Potentiels calculés ---
+E(P1) = 0
+E(P2) = -40
+E(P3) = -6
+E(P4) = -1
+E(P5) = -38
+E(C1) = -50
+E(C2) = -46
+Case entrante : P1-C2 (coût marginal = -26)
+
+Cycle détecté : P0 -> C1 -> P4 -> C0 -> P0
+
+=== Maximisation du transport sur le cycle ===
+Cycle : P0 -> C1 -> P4 -> C0 -> P0
+
+Conditions pour chaque case :
+  (P0, C1) :    0 + delta
+  (C1, P4) :  200 - delta
+  (P4, C0) :    0 + delta
+  (C0, P0) :  100 - delta
+
+delta = 100
+
+Arête(s) supprimée(s) :
+  (P0, C0)
+δ appliqué : 100
+Coût après itération 1 : 19000
+Arête retirée : P1-C1
+
+--- Itération 2 ---
+
+On fixe de façon arbitraire E(P1) = 0
+E(P1) - E(C2) = 20 => E(C2) = 0 - 20 = -20
+E(P3) - E(C2) = 40 => E(P3) = 40 + (-20) = 20
+E(P4) - E(C2) = 45 => E(P4) = 45 + (-20) = 25
+E(P5) - E(C2) = 8 => E(P5) = 8 + (-20) = -12
+E(P5) - E(C1) = 12 => E(C1) = -12 - 12 = -24
+E(P2) - E(C1) = 10 => E(P2) = 10 + (-24) = -14
+
+--- Potentiels calculés ---
+E(P1) = 0
+E(P2) = -14
+E(P3) = 20
+E(P4) = 25
+E(P5) = -12
+E(C1) = -24
+E(C2) = -20
+Case entrante : P4-C1 (coût marginal = -14)
+
+Cycle détecté : P3 -> C0 -> P4 -> C1 -> P3
+
+=== Maximisation du transport sur le cycle ===
+Cycle : P3 -> C0 -> P4 -> C1 -> P3
+
+Conditions pour chaque case :
+  (P3, C0) :    0 + delta
+  (C0, P4) :  100 - delta
+  (P4, C1) :  100 + delta
+  (C1, P3) :  200 - delta
+
+delta = 100
+
+Arête(s) supprimée(s) :
+  (P4, C0)
+δ appliqué : 100
+Coût après itération 2 : 17600
+Arête retirée : P5-C1
+
+--- Itération 3 ---
+
+On fixe de façon arbitraire E(P1) = 0
+E(P1) - E(C2) = 20 => E(C2) = 0 - 20 = -20
+E(P3) - E(C2) = 40 => E(P3) = 40 + (-20) = 20
+E(P4) - E(C2) = 45 => E(P4) = 45 + (-20) = 25
+E(P4) - E(C1) = 35 => E(C1) = 25 - 35 = -10
+E(P2) - E(C1) = 10 => E(P2) = 10 + (-10) = 0
+E(P5) - E(C2) = 8 => E(P5) = 8 + (-20) = -12
+
+--- Potentiels calculés ---
+E(P1) = 0
+E(P2) = 0
+E(P3) = 20
+E(P4) = 25
+E(P5) = -12
+E(C1) = -10
+E(C2) = -20
+
+Solution optimale atteinte.
+
+=== Solution finale ===
+            |    C1     |    C2     | Provisions 
+------------+-----------+-----------+------------
+     P1     |     0     |    100    |    100     
+------------+-----------+-----------+------------
+     P2     |    200    |     0     |    200     
+------------+-----------+-----------+------------
+     P3     |     0     |    100    |    100     
+------------+-----------+-----------+------------
+     P4     |    100    |    100    |    200     
+------------+-----------+-----------+------------
+     P5     |     0     |    200    |    200     
+------------+-----------+-----------+------------
+ Commandes  |    300    |    500    |    800     
+
+Coût total : 17 600

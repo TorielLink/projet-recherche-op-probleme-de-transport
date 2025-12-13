@@ -1,5 +1,7 @@
 import os
 import shutil
+from io import StringIO
+from contextlib import redirect_stdout
 
 from utils.reader import read_table_file
 from utils.trace_generator import generate_trace_file
@@ -14,7 +16,6 @@ TABLEAU_DIR = "Tableaux"
 
 
 def clean_trace_folder():
-    """Supprime tous les fichiers du dossier Traces/ avant régénération."""
     if os.path.exists("Traces"):
         shutil.rmtree("Traces")
     os.makedirs("Traces")
@@ -32,11 +33,10 @@ def generate_all_traces():
         original_P = P.copy()
         original_C = C.copy()
 
+        # ==================================================
         # Nord-Ouest
-        no_P = original_P.copy()
-        no_C = original_C.copy()
-
-        sol_no = northwest_solution(no_P, no_C)
+        # ==================================================
+        sol_no = northwest_solution(original_P.copy(), original_C.copy())
         cost_no = cout_total(original_couts, sol_no)
 
         generate_trace_file(
@@ -45,27 +45,36 @@ def generate_all_traces():
             sol_no, cost_no
         )
 
-      #  Marche-Pied avec Nord-Ouest
-        sol_mp_no = marche_pied_complet(
-            sol_no,
-            original_couts,
-            original_P,
-            original_C,
-            display=False
-        )
+        # ==================================================
+        # Nord-Ouest + Marche-Pied (avec étapes)
+        # ==================================================
+        buffer = StringIO()
+        with redirect_stdout(buffer):
+            sol_mp_no = marche_pied_complet(
+                sol_no,
+                original_couts,
+                original_P,
+                original_C,
+                display=True
+            )
+        steps_no = buffer.getvalue()
         cost_mp_no = cout_total(original_couts, sol_mp_no)
 
         generate_trace_file(
             GROUP, TEAM, problem_number, "mp_no",
             original_couts, original_P, original_C,
-            sol_mp_no, cost_mp_no
+            sol_mp_no, cost_mp_no,
+            steps_output=steps_no
         )
 
+        # ==================================================
         # Balas-Hammer
-        bh_P = original_P.copy()
-        bh_C = original_C.copy()
-
-        sol_bh = balas_hammer(original_couts, bh_P, bh_C)
+        # ==================================================
+        sol_bh = balas_hammer(
+            original_couts,
+            original_P.copy(),
+            original_C.copy()
+        )
         cost_bh = cout_total(original_couts, sol_bh)
 
         generate_trace_file(
@@ -74,20 +83,26 @@ def generate_all_traces():
             sol_bh, cost_bh
         )
 
-        # Marche-Pied avec Balas-Hammer
-        sol_mp_bh = marche_pied_complet(
-            sol_bh,
-            original_couts,
-            original_P,
-            original_C,
-            display=False
-        )
+        # ==================================================
+        # Balas-Hammer + Marche-Pied (avec étapes)
+        # ==================================================
+        buffer = StringIO()
+        with redirect_stdout(buffer):
+            sol_mp_bh = marche_pied_complet(
+                sol_bh,
+                original_couts,
+                original_P,
+                original_C,
+                display=True
+            )
+        steps_bh = buffer.getvalue()
         cost_mp_bh = cout_total(original_couts, sol_mp_bh)
 
         generate_trace_file(
             GROUP, TEAM, problem_number, "mp_bh",
             original_couts, original_P, original_C,
-            sol_mp_bh, cost_mp_bh
+            sol_mp_bh, cost_mp_bh,
+            steps_output=steps_bh
         )
 
 

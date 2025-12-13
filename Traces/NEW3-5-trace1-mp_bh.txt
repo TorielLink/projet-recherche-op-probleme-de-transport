@@ -1,0 +1,48 @@
+Groupe : NEW3
+Équipe : 5
+Problème : 1
+Méthode : Balas-Hammer + Marche-Pied
+
+=== Problème initial ===
+            |    C1     |    C2     | Provisions 
+------------+-----------+-----------+------------
+     P1     |    30     |    20     |    100     
+------------+-----------+-----------+------------
+     P2     |    10     |    50     |    100     
+------------+-----------+-----------+------------
+ Commandes  |    100    |    100    |    200     
+
+=== Étapes de l’optimisation (Marche-Pied) ===
+
+============================================================
+MARCHE-PIED
+============================================================
+Coût initial : 3000
+Le graphe n'est pas connexe (2 composantes). Ajout d'arêtes...
+  - Connexion des composantes via (P1, C1) coût 30
+
+--- Itération 1 ---
+
+On fixe de façon arbitraire E(P1) = 0
+E(P1) - E(C1) = 30 => E(C1) = 0 - 30 = -30
+E(P1) - E(C2) = 20 => E(C2) = 0 - 20 = -20
+E(P2) - E(C1) = 10 => E(P2) = 10 + (-30) = -20
+
+--- Potentiels calculés ---
+E(P1) = 0
+E(P2) = -20
+E(C1) = -30
+E(C2) = -20
+
+Solution optimale atteinte.
+
+=== Solution finale ===
+            |    C1     |    C2     | Provisions 
+------------+-----------+-----------+------------
+     P1     |     0     |    100    |    100     
+------------+-----------+-----------+------------
+     P2     |    100    |     0     |    100     
+------------+-----------+-----------+------------
+ Commandes  |    100    |    100    |    200     
+
+Coût total : 3 000
