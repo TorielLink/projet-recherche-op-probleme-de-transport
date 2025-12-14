@@ -1,0 +1,98 @@
+Groupe : NEW3
+Équipe : 5
+Problème : 7
+Méthode : Nord-Ouest + Marche-Pied
+
+=== Problème initial ===
+            |    C1     |    C2     | Provisions 
+------------+-----------+-----------+------------
+     P1     |    50     |    20     |    100     
+------------+-----------+-----------+------------
+     P2     |    10     |    50     |    200     
+------------+-----------+-----------+------------
+     P3     |    50     |    40     |    100     
+------------+-----------+-----------+------------
+     P4     |    45     |    35     |    200     
+------------+-----------+-----------+------------
+ Commandes  |    300    |    300    |    600     
+
+=== Étapes de l’optimisation (Marche-Pied) ===
+
+============================================================
+MARCHE-PIED
+============================================================
+Coût initial : 18000
+Le graphe n'est pas connexe (2 composantes). Ajout d'arêtes...
+  - Connexion des composantes via (P1, C2) coût 20
+
+--- Itération 1 ---
+
+On fixe de façon arbitraire E(P1) = 0
+E(P1) - E(C1) = 50 => E(C1) = 0 - 50 = -50
+E(P1) - E(C2) = 20 => E(C2) = 0 - 20 = -20
+E(P2) - E(C1) = 10 => E(P2) = 10 + (-50) = -40
+E(P3) - E(C2) = 40 => E(P3) = 40 + (-20) = 20
+E(P4) - E(C2) = 35 => E(P4) = 35 + (-20) = 15
+
+--- Potentiels calculés ---
+E(P1) = 0
+E(P2) = -40
+E(P3) = 20
+E(P4) = 15
+E(C1) = -50
+E(C2) = -20
+Case entrante : P3-C1 (coût marginal = -20)
+
+Cycle détecté : P2 -> C0 -> P0 -> C1 -> P2
+
+=== Maximisation du transport sur le cycle ===
+Cycle : P2 -> C0 -> P0 -> C1 -> P2
+
+Conditions pour chaque case :
+  (P2, C0) :    0 + delta
+  (C0, P0) :  100 - delta
+  (P0, C1) :    0 + delta
+  (C1, P2) :  100 - delta
+
+delta = 100
+
+Arête(s) supprimée(s) :
+  (P0, C0)
+  (P2, C1)
+δ appliqué : 100
+Coût après itération 1 : 16000
+Arête retirée : P1-C1
+
+--- Itération 2 ---
+
+On fixe de façon arbitraire E(P1) = 0
+E(P1) - E(C2) = 20 => E(C2) = 0 - 20 = -20
+E(P3) - E(C2) = 40 => E(P3) = 40 + (-20) = 20
+E(P4) - E(C2) = 35 => E(P4) = 35 + (-20) = 15
+E(P3) - E(C1) = 50 => E(C1) = 20 - 50 = -30
+E(P2) - E(C1) = 10 => E(P2) = 10 + (-30) = -20
+
+--- Potentiels calculés ---
+E(P1) = 0
+E(P2) = -20
+E(P3) = 20
+E(P4) = 15
+E(C1) = -30
+E(C2) = -20
+
+Solution optimale atteinte.
+
+=== Solution finale ===
+            |    C1     |    C2     | Provisions 
+------------+-----------+-----------+------------
+     P1     |     0     |    100    |    100     
+------------+-----------+-----------+------------
+     P2     |    200    |     0     |    200     
+------------+-----------+-----------+------------
+     P3     |    100    |     0     |    100     
+------------+-----------+-----------+------------
+     P4     |     0     |    200    |    200     
+------------+-----------+-----------+------------
+ Commandes  |    300    |    300    |    600     
+
+Coût total : 16 000

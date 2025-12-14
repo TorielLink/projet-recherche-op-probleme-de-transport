@@ -1,0 +1,213 @@
+Groupe : NEW3
+Équipe : 5
+Problème : 6
+Méthode : Nord-Ouest + Marche-Pied
+
+=== Problème initial ===
+            |    C1     |    C2     |    C3     |    C4     | Provisions 
+------------+-----------+-----------+-----------+-----------+------------
+     P1     |    11     |    12     |    10     |    10     |     60     
+------------+-----------+-----------+-----------+-----------+------------
+     P2     |    17     |    16     |    15     |    18     |     30     
+------------+-----------+-----------+-----------+-----------+------------
+     P3     |    19     |    21     |    20     |    22     |     90     
+------------+-----------+-----------+-----------+-----------+------------
+ Commandes  |    50     |    75     |    30     |    25     |    180     
+
+=== Étapes de l’optimisation (Marche-Pied) ===
+
+============================================================
+MARCHE-PIED
+============================================================
+Coût initial : 3035
+La base contient déjà au moins n+m-1 arêtes (aucun ajout nécessaire).
+
+--- Itération 1 ---
+
+On fixe de façon arbitraire E(P1) = 0
+E(P1) - E(C1) = 11 => E(C1) = 0 - 11 = -11
+E(P1) - E(C2) = 12 => E(C2) = 0 - 12 = -12
+E(P2) - E(C2) = 16 => E(P2) = 16 + (-12) = 4
+E(P3) - E(C2) = 21 => E(P3) = 21 + (-12) = 9
+E(P3) - E(C3) = 20 => E(C3) = 9 - 20 = -11
+E(P3) - E(C4) = 22 => E(C4) = 9 - 22 = -13
+
+--- Potentiels calculés ---
+E(P1) = 0
+E(P2) = 4
+E(P3) = 9
+E(C1) = -11
+E(C2) = -12
+E(C3) = -11
+E(C4) = -13
+Case entrante : P1-C4 (coût marginal = -3)
+
+Cycle détecté : P0 -> C3 -> P2 -> C1 -> P0
+
+=== Maximisation du transport sur le cycle ===
+Cycle : P0 -> C3 -> P2 -> C1 -> P0
+
+Conditions pour chaque case :
+  (P0, C3) :    0 + delta
+  (C3, P2) :   25 - delta
+  (P2, C1) :   35 + delta
+  (C1, P0) :   10 - delta
+
+delta = 10
+
+Arête(s) supprimée(s) :
+  (P0, C1)
+δ appliqué : 10
+Coût après itération 1 : 3005
+Arête retirée : P1-C2
+
+--- Itération 2 ---
+
+On fixe de façon arbitraire E(P1) = 0
+E(P1) - E(C1) = 11 => E(C1) = 0 - 11 = -11
+E(P1) - E(C4) = 10 => E(C4) = 0 - 10 = -10
+E(P3) - E(C4) = 22 => E(P3) = 22 + (-10) = 12
+E(P3) - E(C3) = 20 => E(C3) = 12 - 20 = -8
+E(P3) - E(C2) = 21 => E(C2) = 12 - 21 = -9
+E(P2) - E(C2) = 16 => E(P2) = 16 + (-9) = 7
+
+--- Potentiels calculés ---
+E(P1) = 0
+E(P2) = 7
+E(P3) = 12
+E(C1) = -11
+E(C2) = -9
+E(C3) = -8
+E(C4) = -10
+Case entrante : P3-C1 (coût marginal = -4)
+
+Cycle détecté : P2 -> C0 -> P0 -> C3 -> P2
+
+=== Maximisation du transport sur le cycle ===
+Cycle : P2 -> C0 -> P0 -> C3 -> P2
+
+Conditions pour chaque case :
+  (P2, C0) :    0 + delta
+  (C0, P0) :   50 - delta
+  (P0, C3) :   10 + delta
+  (C3, P2) :   15 - delta
+
+delta = 15
+
+Arête(s) supprimée(s) :
+  (P2, C3)
+δ appliqué : 15
+Coût après itération 2 : 2945
+Arête retirée : P3-C4
+
+--- Itération 3 ---
+
+On fixe de façon arbitraire E(P1) = 0
+E(P1) - E(C1) = 11 => E(C1) = 0 - 11 = -11
+E(P1) - E(C4) = 10 => E(C4) = 0 - 10 = -10
+E(P3) - E(C1) = 19 => E(P3) = 19 + (-11) = 8
+E(P3) - E(C3) = 20 => E(C3) = 8 - 20 = -12
+E(P3) - E(C2) = 21 => E(C2) = 8 - 21 = -13
+E(P2) - E(C2) = 16 => E(P2) = 16 + (-13) = 3
+
+--- Potentiels calculés ---
+E(P1) = 0
+E(P2) = 3
+E(P3) = 8
+E(C1) = -11
+E(C2) = -13
+E(C3) = -12
+E(C4) = -10
+Case entrante : P1-C3 (coût marginal = -2)
+
+Cycle détecté : P0 -> C2 -> P2 -> C0 -> P0
+
+=== Maximisation du transport sur le cycle ===
+Cycle : P0 -> C2 -> P2 -> C0 -> P0
+
+Conditions pour chaque case :
+  (P0, C2) :    0 + delta
+  (C2, P2) :   30 - delta
+  (P2, C0) :   15 + delta
+  (C0, P0) :   35 - delta
+
+delta = 30
+
+Arête(s) supprimée(s) :
+  (P2, C2)
+δ appliqué : 30
+Coût après itération 3 : 2885
+Arête retirée : P3-C3
+
+--- Itération 4 ---
+
+On fixe de façon arbitraire E(P1) = 0
+E(P1) - E(C1) = 11 => E(C1) = 0 - 11 = -11
+E(P1) - E(C4) = 10 => E(C4) = 0 - 10 = -10
+E(P3) - E(C1) = 19 => E(P3) = 19 + (-11) = 8
+E(P1) - E(C3) = 10 => E(C3) = 0 - 10 = -10
+E(P3) - E(C2) = 21 => E(C2) = 8 - 21 = -13
+E(P2) - E(C2) = 16 => E(P2) = 16 + (-13) = 3
+
+--- Potentiels calculés ---
+E(P1) = 0
+E(P2) = 3
+E(P3) = 8
+E(C1) = -11
+E(C2) = -13
+E(C3) = -10
+E(C4) = -10
+Case entrante : P1-C2 (coût marginal = -1)
+
+Cycle détecté : P0 -> C1 -> P2 -> C0 -> P0
+
+=== Maximisation du transport sur le cycle ===
+Cycle : P0 -> C1 -> P2 -> C0 -> P0
+
+Conditions pour chaque case :
+  (P0, C1) :    0 + delta
+  (C1, P2) :   45 - delta
+  (P2, C0) :   45 + delta
+  (C0, P0) :    5 - delta
+
+delta = 5
+
+Arête(s) supprimée(s) :
+  (P0, C0)
+δ appliqué : 5
+Coût après itération 4 : 2880
+Arête retirée : P1-C1
+
+--- Itération 5 ---
+
+On fixe de façon arbitraire E(P1) = 0
+E(P1) - E(C2) = 12 => E(C2) = 0 - 12 = -12
+E(P3) - E(C2) = 21 => E(P3) = 21 + (-12) = 9
+E(P2) - E(C2) = 16 => E(P2) = 16 + (-12) = 4
+E(P1) - E(C4) = 10 => E(C4) = 0 - 10 = -10
+E(P3) - E(C1) = 19 => E(C1) = 9 - 19 = -10
+E(P1) - E(C3) = 10 => E(C3) = 0 - 10 = -10
+
+--- Potentiels calculés ---
+E(P1) = 0
+E(P2) = 4
+E(P3) = 9
+E(C1) = -10
+E(C2) = -12
+E(C3) = -10
+E(C4) = -10
+
+Solution optimale atteinte.
+
+=== Solution finale ===
+            |    C1     |    C2     |    C3     |    C4     | Provisions 
+------------+-----------+-----------+-----------+-----------+------------
+     P1     |     0     |     5     |    30     |    25     |     60     
+------------+-----------+-----------+-----------+-----------+------------
+     P2     |     0     |    30     |     0     |     0     |     30     
+------------+-----------+-----------+-----------+-----------+------------
+     P3     |    50     |    40     |     0     |     0     |     90     
+------------+-----------+-----------+-----------+-----------+------------
+ Commandes  |    50     |    75     |    30     |    25     |    180     
+
+Coût total : 2 880

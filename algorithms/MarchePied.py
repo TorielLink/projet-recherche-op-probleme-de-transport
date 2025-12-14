@@ -279,8 +279,6 @@ def marche_pied(solution, couts, display=True):
                 print("\n" + "=" * 60)
                 print("SOLUTION OPTIMALE ATTEINTE")
                 print("=" * 60)
-                cout_final = cout_total(couts, solution)
-                print(f"Coût final : {cout_final}")
             break
         
         # Étape 4 : Trouver le cycle incluant la nouvelle case
@@ -374,7 +372,7 @@ def marche_pied_complet(solution, couts, provision=None, commande=None, display=
     et retourne la solution optimale.
     """
 
-    # Copie de la solution pour éviter les effets de bord
+    # Copie de la solution
     sol = [row.copy() for row in solution]
 
     if display:
@@ -388,6 +386,7 @@ def marche_pied_complet(solution, couts, provision=None, commande=None, display=
     base_set = set(base_cells)
 
     iteration = 0
+    MAX_ITER = 200 # Sécurité anti-boucle infinie
 
     while True:
         iteration += 1
@@ -403,11 +402,10 @@ def marche_pied_complet(solution, couts, provision=None, commande=None, display=
         # Recherche de la case entrante
         min_pos, min_value = lowest_cout_mar(Couts_mar, base_set)
 
-        # Condition d'arrêt
+        # Condition d'arrêt : optimalité
         if min_pos is None:
             if display:
                 print("\nSolution optimale atteinte.")
-                print(f"Coût final : {cout_total(couts, sol)}")
             return sol
 
         if display:
@@ -431,6 +429,13 @@ def marche_pied_complet(solution, couts, provision=None, commande=None, display=
         # Maximisation sur le cycle
         sol, delta, aretes_supprimees = maximiser_transport_sur_cycle(sol, cycle)
 
+        # Condition d'arrêt : delta nul
+        if delta == 0:
+            if display:
+                print("Arrêt : delta nul (solution dégénérée ou déjà optimale).")
+                print(f"Coût final : {cout_total(couts, sol)}")
+            return sol
+
         if display:
             print(f"δ appliqué : {delta}")
             print(f"Coût après itération {iteration} : {cout_total(couts, sol)}")
@@ -448,8 +453,9 @@ def marche_pied_complet(solution, couts, provision=None, commande=None, display=
 
         base_cells = list(base_set)
 
-        # Sécurité : éviter une boucle infinie
-        if iteration > 100:
+        # Sécurité anti-boucle infinie
+        if iteration >= MAX_ITER:
             if display:
                 print("Arrêt : nombre maximal d'itérations atteint.")
+                print(f"Coût courant : {cout_total(couts, sol)}")
             return sol

@@ -43,7 +43,3 @@ Thumbs.db
 *.tmp
 *.log
 
-# Résultats de test
-Data/
-Figures/
-Traces/

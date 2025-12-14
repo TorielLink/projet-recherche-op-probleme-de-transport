@@ -1,0 +1,80 @@
+Groupe : NEW3
+Équipe : 5
+Problème : 3
+Méthode : Nord-Ouest + Marche-Pied
+
+=== Problème initial ===
+            |    C1     |    C2     | Provisions 
+------------+-----------+-----------+------------
+     P1     |    30     |    20     |    600     
+------------+-----------+-----------+------------
+     P2     |    10     |    50     |    500     
+------------+-----------+-----------+------------
+ Commandes  |    100    |   1000    |    1100    
+
+=== Étapes de l’optimisation (Marche-Pied) ===
+
+============================================================
+MARCHE-PIED
+============================================================
+Coût initial : 38000
+La base contient déjà au moins n+m-1 arêtes (aucun ajout nécessaire).
+
+--- Itération 1 ---
+
+On fixe de façon arbitraire E(P1) = 0
+E(P1) - E(C1) = 30 => E(C1) = 0 - 30 = -30
+E(P1) - E(C2) = 20 => E(C2) = 0 - 20 = -20
+E(P2) - E(C2) = 50 => E(P2) = 50 + (-20) = 30
+
+--- Potentiels calculés ---
+E(P1) = 0
+E(P2) = 30
+E(C1) = -30
+E(C2) = -20
+Case entrante : P2-C1 (coût marginal = -50)
+
+Cycle détecté : P1 -> C0 -> P0 -> C1 -> P1
+
+=== Maximisation du transport sur le cycle ===
+Cycle : P1 -> C0 -> P0 -> C1 -> P1
+
+Conditions pour chaque case :
+  (P1, C0) :    0 + delta
+  (C0, P0) :  100 - delta
+  (P0, C1) :  500 + delta
+  (C1, P1) :  500 - delta
+
+delta = 100
+
+Arête(s) supprimée(s) :
+  (P0, C0)
+δ appliqué : 100
+Coût après itération 1 : 33000
+Arête retirée : P1-C1
+
+--- Itération 2 ---
+
+On fixe de façon arbitraire E(P1) = 0
+E(P1) - E(C2) = 20 => E(C2) = 0 - 20 = -20
+E(P2) - E(C2) = 50 => E(P2) = 50 + (-20) = 30
+E(P2) - E(C1) = 10 => E(C1) = 30 - 10 = 20
+
+--- Potentiels calculés ---
+E(P1) = 0
+E(P2) = 30
+E(C1) = 20
+E(C2) = -20
+
+Solution optimale atteinte.
+
+=== Solution finale ===
+            |    C1     |    C2     | Provisions 
+------------+-----------+-----------+------------
+     P1     |     0     |    600    |    600     
+------------+-----------+-----------+------------
+     P2     |    100    |    400    |    500     
+------------+-----------+-----------+------------
+ Commandes  |    100    |   1000    |    1100    
+
+Coût total : 33 000
