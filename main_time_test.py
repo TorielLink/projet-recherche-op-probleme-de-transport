@@ -1,11 +1,14 @@
-import psutil, os, multiprocessing
-from utils.generation.ramdom_problem import generate_random_transport_problem
+import multiprocessing
+import os
+import psutil
+
 from utils.benchmark.timing import (
     measure_time_nord_ouest,
     measure_time_balas_hammer,
     measure_time_marche_pied_from_NO,
     measure_time_marche_pied_from_BH,
 )
+from utils.generation.ramdom_problem import generate_random_transport_problem
 
 
 def benchmark(n_values):

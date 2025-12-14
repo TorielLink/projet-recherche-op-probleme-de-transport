@@ -1,11 +1,11 @@
-from utils.graph.cycle_optimization import maximize_flow_on_cycle
 from utils.graph.connectivity import ensure_connectivity
+from utils.graph.cycle_graph import find_cycle_with_entering_cell
+from utils.graph.cycle_optimization import maximize_flow_on_cycle
 from utils.math.cost import compute_total_cost
 from utils.math.stepping_stone_costs import (
     compute_potentials_and_reduced_costs,
     find_most_negative_reduced_cost,
 )
-from utils.graph.cycle_graph import find_cycle_with_entering_cell
 
 
 def solve_stepping_stone(solution, couts, provision=None, commande=None, display=True):

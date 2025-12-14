@@ -1,10 +1,10 @@
-import time
 import os
+import time
 from contextlib import redirect_stdout
 
-from algorithms.stepping_stone import solve_stepping_stone
-from algorithms.northwest_corner import compute_northwest_solution
 from algorithms.balas_hammer import compute_balas_hammer_solution
+from algorithms.northwest_corner import compute_northwest_solution
+from algorithms.stepping_stone import solve_stepping_stone
 
 
 def measure_time_nord_ouest(couts, P, C):

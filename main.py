@@ -1,12 +1,11 @@
 import os
 
-from utils.io.table_reader import read_table_file
-from utils.display.table_display import DisplayTable
-from utils.math.cost import compute_total_cost
-
+from algorithms.balas_hammer import compute_balas_hammer_solution
 from algorithms.northwest_corner import compute_northwest_solution
 from algorithms.stepping_stone import solve_stepping_stone
-from algorithms.balas_hammer import compute_balas_hammer_solution
+from utils.display.table_display import DisplayTable
+from utils.io.table_reader import read_table_file
+from utils.math.cost import compute_total_cost
 
 
 def main():
