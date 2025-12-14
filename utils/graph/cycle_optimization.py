@@ -1,16 +1,22 @@
-def maximiser_transport_sur_cycle(solution, cycle):
-    # 
-    # Maximise le transport sur un cycle en alternant ajout/retrait.
-    
-    # Args:
-    #     solution: Matrice de transport [n × m]
-    #     cycle: Liste des sommets du cycle retournée par la fonction bfs_detect_cycle (ex: ['P0', 'C1', 'P2', 'C0'])
-    
-    # Returns:
-    #     (solution, delta, aretes_supprimees)
-    # soution: proposition de transport
-    # delta: valeur de la quantité de marchandise que l'on souhaite ajouter/retirer  à chaque arêtes
-    # aretes_supprimees: retourne les couples de sommets représentant les arêtes.
+def maximize_flow_on_cycle(solution, cycle):
+    """
+    Maximise le transport sur un cycle du marche-pied.
+
+    Principe :
+        - On alterne ajout (+δ) et retrait (−δ) le long du cycle
+        - δ est le minimum des quantités sur les arêtes négatives
+        - Le transfert conserve la faisabilité de la solution
+
+    Args:
+        solution: matrice de transport
+        cycle: liste des sommets du cycle (ex: ['P0', 'C1', 'P2', 'C0'])
+
+    Retour :
+        solution: solution modifiée
+        delta: quantité transférée sur le cycle
+        aretes_supprimees: arêtes mises à zéro après le transfert
+    """
+
     aretes = []
     delta = float('inf')
 
@@ -51,9 +57,7 @@ def maximiser_transport_sur_cycle(solution, cycle):
         if signe == -1 and solution[i][j] == 0:
             aretes_supprimees.append((i, j))
 
-    # =====================================================
     # AFFICHAGE DES ARÊTES SUPPRIMÉES
-    # =====================================================
     if aretes_supprimees:
         print("\nArête(s) supprimée(s) :")
         for i, j in aretes_supprimees:

@@ -1,17 +1,25 @@
-from utils.display import DisplayTable
-from utils.calculs import cout_total
+def compute_northwest_solution(provision, commande):
+    """
+    Calcule une solution initiale du problème de transport
+    en utilisant la méthode du coin Nord-Ouest.
 
-# ---------------------------------------------------------------------
-# Calcule une solution initiale avec la méthode du Nord-Ouest.
-#
-# On remplit la matrice de transport en partant du coin supérieur gauche.
-# À chaque case, on place la quantité maximale possible, puis on avance
-# soit sur la ligne suivante, soit sur la colonne suivante en fonction
-# de l’épuisement des provisions ou des commandes.
-#
-# Cette méthode produit toujours une solution réalisable.
-# ---------------------------------------------------------------------
-def northwest_solution(provision, commande):
+    Principe :
+    - On démarre à la case (0,0)
+    - À chaque étape, on alloue la quantité maximale possible
+    - On avance sur la ligne ou la colonne selon l’épuisement
+      des provisions ou des commandes
+
+    Cette méthode garantit une solution réalisable
+    mais pas nécessairement optimale.
+
+    Args:
+        provision: liste des provisions des fournisseurs
+        commande: liste des commandes des clients
+
+    Retour :
+        solution: matrice de transport (liste de listes)
+    """
+
     n = len(provision)
     m = len(commande)
     solution = [[0] * m for _ in range(n)]
@@ -37,31 +45,3 @@ def northwest_solution(provision, commande):
             j += 1
 
     return solution
-
-
-# ---------------------------------------------------------------------
-# Affiche la solution Nord-Ouest sous forme de tableau et calcule son coût.
-#
-# Affiche :
-# - la matrice de la solution
-# - les provisions et commandes
-# - le coût total de transport
-# ---------------------------------------------------------------------
-def afficher_solution_nord_ouest(provision, commande, couts):
-    solution = northwest_solution(provision, commande)
-
-    data = DisplayTable.DonneesTest(
-        couts=solution,
-        provision=provision,
-        commande=commande
-    )
-
-    print("\n=== Solution Nord-Ouest ===")
-    table = DisplayTable()
-    table.afficher_table(data)
-
-    cout = cout_total(couts, solution)
-    cout_formatte = format(cout, ",").replace(",", " ")
-    print("\nCoût total du transport :", cout_formatte)
-
-    return solution, cout

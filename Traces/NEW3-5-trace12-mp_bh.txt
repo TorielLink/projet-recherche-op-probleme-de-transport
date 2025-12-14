@@ -94,6 +94,7 @@ E(C14) = -173
 E(C15) = -172
 E(C16) = -171
 
+Aucun coût marginal négatif n’a été détecté.
 Solution optimale atteinte.
 
 === Solution finale ===

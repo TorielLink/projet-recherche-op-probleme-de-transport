@@ -2,16 +2,22 @@ import os, psutil, multiprocessing, sys
 import matplotlib.pyplot as plt
 import csv
 
-from utils.ramdom_problem import generate_random_transport_problem
-from utils.time_test_fonction import (
+from utils.generation.ramdom_problem import generate_random_transport_problem
+from utils.benchmark.timing import (
     measure_time_nord_ouest,
     measure_time_balas_hammer,
     measure_time_marche_pied_from_NO,
     measure_time_marche_pied_from_BH,
 )
 
-# Création et nettoyage automatique des dossiers Figures/ et Data/
 def ensure_directories():
+    """
+    Crée et nettoie les dossiers de sortie.
+
+    Principe :
+        - Crée les dossiers Figures/ et Data/
+        - Supprime les fichiers existants
+    """
     folders = ["Figures", "Data"]
 
     for folder in folders:
@@ -24,6 +30,22 @@ def ensure_directories():
 
 # Génère les mesures de temps
 def generate_cloud_data(n_values_all, n_values_marche_pied, repetitions=100):
+    """
+    Génère les données de temps pour les nuages de points.
+
+    Principe :
+        - Génère des problèmes aléatoires
+        - Mesure les temps des algorithmes
+         - Sauvegarde les résultats en CSV
+
+    Args:
+        n_values_all: tailles testées pour NO et BH
+        n_values_marche_pied: tailles testées pour le Marche-Pied
+        repetitions: nombre de répétitions par taille
+
+    Retour :
+        results: dictionnaire des temps mesurés
+    """
 
     results = {
         "theta_no": {},
@@ -93,8 +115,16 @@ def generate_cloud_data(n_values_all, n_values_marche_pied, repetitions=100):
     return results
 
 
-# Tracé des nuages de points
 def plot_cloud(results, title, key):
+    """
+    Trace un nuage de points à partir des données de benchmark.
+
+    Args:
+        results: dictionnaire des résultats
+        title: titre du graphique
+        key: clé des données à tracer
+    """
+
     plt.figure(figsize=(10, 6))
 
     for n, values in results[key].items():
@@ -115,6 +145,11 @@ def plot_cloud(results, title, key):
 
 
 if __name__ == "__main__":
+    """
+    Script principal pour générer et afficher
+    les nuages de points de complexité.
+    """
+
     ensure_directories()
 
     # Force en mono-cœur

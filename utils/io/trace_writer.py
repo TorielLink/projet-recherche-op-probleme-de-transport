@@ -1,13 +1,14 @@
 import os
 from io import StringIO
 from contextlib import redirect_stdout
-from utils.display import DisplayTable
+from utils.display.table_display import DisplayTable
 
 
 def table_to_string(couts, P, C):
     """
     Génère une représentation textuelle d'un tableau de transport.
     """
+
     dt = DisplayTable.DonneesTest(couts, P, C)
     table = DisplayTable()
 
@@ -19,9 +20,9 @@ def table_to_string(couts, P, C):
 
 
 def generate_trace_file(
-    group, team, problem_number, method,
-    couts, P, C, solution, total_cost,
-    steps_output=None
+        group, team, problem_number, method,
+        couts, P, C, solution, total_cost,
+        steps_output=None
 ):
     """
     Génère un fichier de trace.

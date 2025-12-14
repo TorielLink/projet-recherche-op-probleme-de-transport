@@ -113,6 +113,7 @@ E(C1) = -5
 E(C2) = -6
 E(C3) = -4
 
+Aucun coût marginal négatif n’a été détecté.
 Solution optimale atteinte.
 
 === Solution finale ===

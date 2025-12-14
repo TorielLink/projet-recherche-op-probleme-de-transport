@@ -80,6 +80,7 @@ E(P4) = 15
 E(C1) = -30
 E(C2) = -20
 
+Aucun coût marginal négatif n’a été détecté.
 Solution optimale atteinte.
 
 === Solution finale ===

@@ -1,28 +1,23 @@
 import os
 
 
-# ---------------------------------------------------------------------
-# Lit un fichier texte contenant un tableau de transport
-#
-# Format des tableaux :
-#   n m
-#   a11 ... a1m  P1
-#   ...
-#   an1 ... anm  Pn
-#   C1  ...  Cm
-#
-# Dans ce format :
-# - n = nombre de fournisseurs
-# - m = nombre de clients
-# - chaque ligne i contient m coûts + la provision Pi
-# - la dernière ligne contient les m commandes
-#
-# La fonction retourne trois objets Python :
-#   - costs      : matrice des coûts (n × m)
-#   - provision  : liste de taille n
-#   - commande   : liste de taille m
-# ---------------------------------------------------------------------
 def read_table_file(path):
+    """
+    Lit un fichier texte décrivant un problème de transport.
+
+    Format attendu :
+        - première ligne : n m
+        - n lignes suivantes : m coûts + 1 provision
+        - dernière ligne : m commandes
+
+    Args:
+        path: chemin vers le fichier texte
+
+    Retour :
+        costs: matrice des coûts (n x m)
+        provision: liste des provisions
+        commande: liste des commandes
+    """
     if not os.path.exists(path):
         raise FileNotFoundError(f"Fichier introuvable : {path}")
 
