@@ -4,9 +4,10 @@ from utils.io.table_reader import read_table_file
 from utils.display.table_display import DisplayTable
 from utils.math.cost import compute_total_cost
 
-from algorithms.northwest import compute_northwest_solution
+from algorithms.northwest_corner import compute_northwest_solution
 from algorithms.stepping_stone import solve_stepping_stone
 from algorithms.balas_hammer import compute_balas_hammer_solution
+
 
 def main():
     """
@@ -95,7 +96,7 @@ def main():
             )
 
         cost_initial = compute_total_cost(costs, solution)
-        print(f"\nCoût initial : {cost_initial}")
+        print(f"\nCoût initial : {format(cost_initial, ',').replace(',', ' ')}")
 
         # Optimisation (Marche-Pied)
         while True:
@@ -125,7 +126,9 @@ def main():
             )
 
             cost_final = compute_total_cost(costs, solution)
-            print(f"\nCoût total optimisé : {cost_final}")
+            cost_final_fmt = format(cost_final, ",").replace(",", " ")
+            print(f"\nCoût total optimisé : {cost_final_fmt}")
+
 
         else:
             print("\nSolution conservée sans optimisation.")

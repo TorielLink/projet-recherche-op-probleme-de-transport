@@ -5,7 +5,7 @@ from contextlib import redirect_stdout
 
 from utils.io.table_reader import read_table_file
 from utils.io.trace_writer import generate_trace_file
-from algorithms.northwest import compute_northwest_solution
+from algorithms.northwest_corner import compute_northwest_solution
 from utils.math.cost import compute_total_cost
 from algorithms.balas_hammer import compute_balas_hammer_solution
 from algorithms.stepping_stone import solve_stepping_stone

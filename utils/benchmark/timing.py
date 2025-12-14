@@ -3,7 +3,7 @@ import os
 from contextlib import redirect_stdout
 
 from algorithms.stepping_stone import solve_stepping_stone
-from algorithms.northwest import compute_northwest_solution
+from algorithms.northwest_corner import compute_northwest_solution
 from algorithms.balas_hammer import compute_balas_hammer_solution
 
 
