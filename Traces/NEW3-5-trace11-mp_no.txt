@@ -206,6 +206,7 @@ E(C8) = -8
 E(C9) = -9
 E(C10) = -10
 
+Aucun coût marginal négatif n’a été détecté.
 Solution optimale atteinte.
 
 === Solution finale ===

@@ -197,6 +197,7 @@ E(C2) = -12
 E(C3) = -10
 E(C4) = -10
 
+Aucun coût marginal négatif n’a été détecté.
 Solution optimale atteinte.
 
 === Solution finale ===

@@ -1,21 +1,17 @@
-# Module: connexite.py
-# Fonctions pour vérifier et garantir la connexité d'un graphe biparti dérivé d'une "solution"
-# (matrice solution) et pour compléter une base sans créer de cycles.
-# Utilise build_graph_from_solution pour construire le graphe initial et
-# bfs_detect_cycle pour détecter la présence de cycles.
-
-from utils.graph_cycle import build_graph_from_solution, bfs_detect_cycle
-
+from utils.graph.cycle_graph import build_graph_from_solution, bfs_detect_cycle
 
 def _components(graph):
     """
-    Calcule les composantes connexes du graphe.
-    - graph : dictionnaire {noeud: [voisins,...]}
+    Calcule les composantes connexes d’un graphe non orienté.
+
+    Args:
+        graph: graphe sous forme de dictionnaire
+
     Retour :
-    - comp  : dictionnaire {noeud: id_composante}
-    - cid   : nombre de composantes distinctes
-    Méthode : parcours en profondeur (stack) itératif.
+        comp: dictionnaire sommet -> id de composante
+        cid: nombre total de composantes
     """
+
     comp = {}
     cid = 0
     for node in graph:
@@ -35,16 +31,21 @@ def _components(graph):
 
 def _connect_graph(graph, edges, solution, candidates):
     """
-    Tente de rendre le graphe connexe en ajoutant des arêtes à coût minimal
-    parmi les "candidates" (liste triée de tuples (cout, i, j) correspondant
-    aux cases solution[i][j] == 0). On ajoute une arête seulement si elle
-    relie deux composantes distinctes et si l'arête n'est pas déjà présente.
-    Modifie :
-    - graph (ajout des voisins),
-    - edges (ensemble des arêtes de la base),
-    - solution (marque la case correspondante à 0 pour indiquer l'ajout).
+    Rend le graphe connexe en ajoutant des arêtes à coût minimal.
+
+    Principe :
+        - Parcourt les cases candidates (solution == 0)
+        - Ajoute une arête si elle relie deux composantes différentes
+        - Met à jour le graphe et la base
+
+    Args:
+        graph: graphe biparti courant
+        edges: ensemble des arêtes de la base
+        solution: matrice de transport
+        candidates: liste des cases candidates triées par coût
+
     Retour :
-    - True si le graphe devient connexe, False sinon.
+        True si le graphe devient connexe, False sinon
     """
     comp, num_comp = _components(graph)
     if num_comp == 1:
@@ -55,10 +56,10 @@ def _connect_graph(graph, edges, solution, candidates):
 
     # Copie de la liste de candidats pour pouvoir pop sans altérer l'original.
     remaining = list(candidates)
-    
+
     while num_comp > 1 and remaining:
         added = False
-        
+
         for idx, (cost, i, j) in enumerate(remaining):
             u, v = f"P{i}", f"C{j}"
             # Ignorer si arête déjà présente
@@ -79,15 +80,15 @@ def _connect_graph(graph, edges, solution, candidates):
             solution[i][j] = 0
             added = True
 
-            print(f"  - Connexion des composantes via (P{i+1}, C{j+1}) coût {cost}")
+            print(f"  - Connexion des composantes via (P{i + 1}, C{j + 1}) coût {cost}")
 
-            # Recalculer les composantes après ajout et retirer le candidat utilisé
+            # Recalcul les composantes après l'ajout
             comp, num_comp = _components(graph)
             remaining.pop(idx)
             break
 
+        # Si aucune arête n'a pu être ajoutée, on arrête
         if not added:
-            # Plus aucun candidat ne permet de connecter deux composantes distinctes
             print("Impossible de connecter toutes les composantes avec les cases à 0 disponibles.")
             return False
 
@@ -96,13 +97,21 @@ def _connect_graph(graph, edges, solution, candidates):
 
 def _complete_basis(graph, edges, solution, candidates, target_edges):
     """
-    Complète la base jusqu'à target_edges arêtes sans créer de cycle.
-    Parcourt les candidats (copie) et ajoute une arête si elle ne crée pas de
-    cycle (vérifié par bfs_detect_cycle) et si elle n'appartient pas déjà à la même composante.
-    Modifie graph, edges et solution.
+    Complète la base jusqu’à m + n − 1 arêtes sans créer de cycle.
+
+    Principe :
+        - Ajoute des arêtes candidates
+        - Refuse tout ajout qui crée un cycle
+
+    Args:
+        graph: graphe biparti
+        edges: ensemble des arêtes de la base
+        solution: matrice de transport
+        candidates: liste des cases candidates
+        target_edges: nombre d’arêtes cible
     """
     remaining = list(candidates)
-    
+
     while len(edges) < target_edges and remaining:
         comp, _ = _components(graph)
         added = False
@@ -133,7 +142,7 @@ def _complete_basis(graph, edges, solution, candidates, target_edges):
             solution[i][j] = 0
             added = True
 
-            print(f"  - Ajout de l'arête (P{i+1}, C{j+1}) coût {cost} (aucun cycle créé)")
+            print(f"  - Ajout de l'arête (P{i + 1}, C{j + 1}) coût {cost} (aucun cycle créé)")
             remaining.pop(idx)
             break
 
@@ -143,24 +152,31 @@ def _complete_basis(graph, edges, solution, candidates, target_edges):
             break
 
 
-def connexite(solution, couts):
+def ensure_connectivity(solution, couts):
     """
-    Interface principale :
-    - Vérifie la connexité du graphe biparti issu de 'solution' (matrice m x n).
-    - Si nécessaire, ajoute des arêtes (cases à 0) de coût minimal pour connecter
-      le graphe.
-    - Puis complète la base jusqu'à m + n - 1 arêtes sans créer de cycle.
+    Rend la base du problème de transport connexe et complète.
+
+    Principe :
+        - Vérifie la connexité du graphe associé à la solution
+        - Ajoute des arêtes à coût minimal si nécessaire
+        - Complète la base jusqu’à m + n − 1 arêtes sans cycle
+
+    Args:
+        solution: matrice de transport
+        couts: matrice des coûts
+
     Retour :
-    - (solution_modifiee, base_cells)
-      où base_cells est la liste des tuples (i, j) correspondant aux arêtes de la base.
+        solution_modifiee: solution mise à jour
+        base_cells: liste des arêtes de la base (i, j)
     """
 
     m = len(solution)  # nombre de fournisseurs (lignes)
-    n = len(solution[0]) if solution else 0  # nombre de clients (colonnes)
+    n = len(solution[0]) if solution else 0  # nombre de clients (colonnes
 
-    # Construire le graphe initial à partir de la solution (utilise la convention P{i}, C{j})
+    # Construit le graphe initial à partir de la solution
     graph = build_graph_from_solution(solution)
-    # S'assurer que tous les noeuds existent dans le dictionnaire même s'ils n'ont pas de voisins
+
+    # Initialiser les noeuds dans le graphe (au cas où certains n'ont pas d'arêtes)
     for i in range(m):
         graph.setdefault(f"P{i}", [])
     for j in range(n):
@@ -181,16 +197,16 @@ def connexite(solution, couts):
         key=lambda x: (x[0], x[1], x[2])
     )
 
-    # 1) Rendre le graphe connexe si nécessaire
+    # Rend le graphe connexe si nécessaire
     connected = _connect_graph(graph, edges, solution, candidates)
     if not connected:
         # Retourner la solution telle quelle si impossible de connecter
         base_cells = [(i, j) for i in range(m) for j in range(n) if (f"P{i}", f"C{j}") in edges]
         return solution, base_cells
 
-    # 2) Compléter la base jusqu'à m+n-1 sans créer de cycles
+    # Complète la base jusqu'à m + n - 1 arêtes sans créer de cycle
     _complete_basis(graph, edges, solution, candidates, target_edges)
 
-    # Construire la liste finale des arêtes de base (indices i,j en 1-based)
+    # Retourner la solution modifiée et les cases de la base
     base_cells = [(i, j) for i in range(m) for j in range(n) if (f"P{i}", f"C{j}") in edges]
     return solution, base_cells

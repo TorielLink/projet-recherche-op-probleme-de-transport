@@ -34,6 +34,7 @@ E(P2) = -10
 E(C1) = -10
 E(C2) = -20
 
+Aucun coût marginal négatif n’a été détecté.
 Solution optimale atteinte.
 
 === Solution finale ===
