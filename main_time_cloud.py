@@ -1,41 +1,57 @@
-import os
-import matplotlib.pyplot as plt
 import csv
+import multiprocessing
+import os
+import psutil
+import sys
 
-from utils.ramdom_problem import generate_random_transport_problem
-from utils.time_test_fonction import (
+import matplotlib.pyplot as plt
+
+from utils.benchmark.timing import (
     measure_time_nord_ouest,
     measure_time_balas_hammer,
     measure_time_marche_pied_from_NO,
     measure_time_marche_pied_from_BH,
 )
+from utils.generation.ramdom_problem import generate_random_transport_problem
 
 
-# ---------------------------------------------------------------------
-# Création et nettoyage automatique des dossiers Figures/ et Data/
-# ---------------------------------------------------------------------
 def ensure_directories():
-    # Dossiers à gérer
+    """
+    Crée et nettoie les dossiers de sortie.
+
+    Principe :
+        - Crée les dossiers Figures/ et Data/
+        - Supprime les fichiers existants
+    """
     folders = ["Figures", "Data"]
 
     for folder in folders:
         os.makedirs(folder, exist_ok=True)
-
-        # Supprimer tous les anciens fichiers du dossier
         for filename in os.listdir(folder):
             file_path = os.path.join(folder, filename)
-            try:
-                if os.path.isfile(file_path):
-                    os.remove(file_path)
-            except Exception as e:
-                print(f"Erreur lors de la suppression de {file_path} : {e}")
+            if os.path.isfile(file_path):
+                os.remove(file_path)
 
 
-# ---------------------------------------------------------------------
-# Génère 100 mesures pour chaque taille n
-# Stocke les résultats dans Data/
-# ---------------------------------------------------------------------
-def generate_cloud_data(n_list):
+# Génère les mesures de temps
+def generate_cloud_data(n_values_all, n_values_marche_pied, repetitions=100):
+    """
+    Génère les données de temps pour les nuages de points.
+
+    Principe :
+        - Génère des problèmes aléatoires
+        - Mesure les temps des algorithmes
+         - Sauvegarde les résultats en CSV
+
+    Args:
+        n_values_all: tailles testées pour NO et BH
+        n_values_marche_pied: tailles testées pour le Marche-Pied
+        repetitions: nombre de répétitions par taille
+
+    Retour :
+        results: dictionnaire des temps mesurés
+    """
+
     results = {
         "theta_no": {},
         "theta_bh": {},
@@ -45,7 +61,7 @@ def generate_cloud_data(n_list):
         "sum_bh": {},
     }
 
-    for n in n_list:
+    for n in n_values_all:
         print(f"\n--- Génération des données pour n = {n} ---")
 
         theta_no_values = []
@@ -55,23 +71,31 @@ def generate_cloud_data(n_list):
         sum_no_values = []
         sum_bh_values = []
 
-        # 100 répétitions par valeur de n
-        for _ in range(100):
+        for _ in range(repetitions):
             couts, P, C = generate_random_transport_problem(n)
 
-            t1 = measure_time_nord_ouest(couts, P, C)
-            t2 = measure_time_balas_hammer(couts, P, C)
-            t3 = measure_time_marche_pied_from_NO(couts, P, C)
-            t4 = measure_time_marche_pied_from_BH(couts, P, C)
+            t_no = measure_time_nord_ouest(couts, P, C)
+            t_bh = measure_time_balas_hammer(couts, P, C)
 
-            theta_no_values.append(t1)
-            theta_bh_values.append(t2)
-            t_no_values.append(t3)
-            t_bh_values.append(t4)
-            sum_no_values.append(t1 + t3)
-            sum_bh_values.append(t2 + t4)
+            theta_no_values.append(t_no)
+            theta_bh_values.append(t_bh)
 
-        # Ajout en mémoire
+            # Marche-pied seulement jusqu’à 160 (sinon temps trop long)
+            if n in n_values_marche_pied:
+                t_mp_no = measure_time_marche_pied_from_NO(couts, P, C)
+                t_mp_bh = measure_time_marche_pied_from_BH(couts, P, C)
+
+                t_no_values.append(t_mp_no)
+                t_bh_values.append(t_mp_bh)
+                sum_no_values.append(t_no + t_mp_no)
+                sum_bh_values.append(t_bh + t_mp_bh)
+            else:
+                t_no_values.append(None)
+                t_bh_values.append(None)
+                sum_no_values.append(None)
+                sum_bh_values.append(None)
+
+        # Stockage mémoire
         results["theta_no"][n] = theta_no_values
         results["theta_bh"][n] = theta_bh_values
         results["t_no"][n] = t_no_values
@@ -79,56 +103,75 @@ def generate_cloud_data(n_list):
         results["sum_no"][n] = sum_no_values
         results["sum_bh"][n] = sum_bh_values
 
-        # Sauvegarde CSV propre (écrase automatiquement)
+        # Sauvegarde CSV
         with open(f"Data/results_n{n}.csv", "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(["theta_no", "theta_bh", "t_no", "t_bh", "sum_no", "sum_bh"])
-            for i in range(100):
+            for i in range(repetitions):
                 writer.writerow([
                     theta_no_values[i],
                     theta_bh_values[i],
                     t_no_values[i],
                     t_bh_values[i],
                     sum_no_values[i],
-                    sum_bh_values[i]
+                    sum_bh_values[i],
                 ])
 
     return results
 
 
-# ---------------------------------------------------------------------
-# Crée un nuage de points et sauvegarde l'image
-# ---------------------------------------------------------------------
 def plot_cloud(results, title, key):
+    """
+    Trace un nuage de points à partir des données de benchmark.
+
+    Args:
+        results: dictionnaire des résultats
+        title: titre du graphique
+        key: clé des données à tracer
+    """
+
     plt.figure(figsize=(10, 6))
 
     for n, values in results[key].items():
-        x = [n] * len(values)
-        plt.scatter(x, values, s=10)
+        filtered = [(n, v) for v in values if v is not None]
+        if not filtered:
+            continue
+        x, y = zip(*filtered)
+        plt.scatter(x, y, s=10)
 
     plt.xlabel("Taille n du problème")
     plt.ylabel("Temps (secondes)")
     plt.title(title)
     plt.grid(True)
 
-    # Sauvegarde PNG (écrase automatiquement si des résultats avaient été enregistrer avant)
     safe_title = title.replace("(", "").replace(")", "").replace(" ", "_")
-    output_path = f"Figures/{safe_title}.png"
-    plt.savefig(output_path)
-
-    print(f"Figure enregistrée : {output_path}")
+    plt.savefig(f"Figures/{safe_title}.png")
+    print(f"Figure enregistrée : Figures/{safe_title}.png")
 
 
-# ---------------------------------------------------------------------
-# Main : exécute tous les graphes
-# ---------------------------------------------------------------------
 if __name__ == "__main__":
+    """
+    Script principal pour générer et afficher
+    les nuages de points de complexité.
+    """
+
     ensure_directories()
 
-    # Définition des tailles des problèmes de transport
-    n_values = [10, 40, 100]
+    # Force en mono-cœur
+    p = psutil.Process(os.getpid())
+    p.cpu_affinity([0])
 
-    all_results = generate_cloud_data(n_values)
+    n_values_all = [10, 20, 40, 80, 160, 320, 640]
+    n_values_marche_pied = [10, 20, 40, 80, 160]
+
+    all_results = generate_cloud_data(
+        n_values_all,
+        n_values_marche_pied,
+        repetitions=100
+    )
+
+    # Rétablir tous les cœurs
+    p.cpu_affinity(list(range(multiprocessing.cpu_count())))
 
     plot_cloud(all_results, "θNO(n)", "theta_no")
     plot_cloud(all_results, "θBH(n)", "theta_bh")
@@ -138,3 +181,4 @@ if __name__ == "__main__":
     plot_cloud(all_results, "θBH(n) + tBH(n)", "sum_bh")
 
     plt.show()
+    sys.exit(0)
