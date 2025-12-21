@@ -13,6 +13,14 @@ L’objectif est de fournir :
 * une structure de code lisible et défendable dans un cadre académique.
 
 ---
+## 👥 Membres de l’équipe
+- [Inès Benalia](https://github.com/JuGurThales)
+- [Nicolas E.](https://github.com/Legallait)
+- [Yannick Han](https://github.com/Imyahan)
+- [TorielLink](https://github.com/TorielLink)
+- [Kim Lan Tran](https://github.com/Kim0871)
+
+---
 
 ## 📁 Structure du projet
 
